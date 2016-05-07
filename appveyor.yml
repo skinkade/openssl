@@ -7,7 +7,8 @@ install:
   - choco install strawberryperl
   - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
   - ps: (new-object net.webclient).DownloadFile('http://rakudo.org/downloads/star/rakudo-star-2016.04-x86_64 (JIT).msi', 'rakudo.msi')
-  - ps: msiexec /i rakudo.msi /quiet /qn /norestart /log install.log
+  - ps: msiexec /i rakudo.msi /qn /norestart /log install.log
+  - type install.log
   - dir C:\rakudo\bin
   - SET PATH=C:\rakudo\bin;C:\rakudo\share\perl6\site\bin;%PATH%
   - echo %PATH%
