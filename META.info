@@ -22,5 +22,6 @@
         "OpenSSL::SSL"        : "lib/OpenSSL/SSL.pm6",
         "OpenSSL::X509"       : "lib/OpenSSL/X509.pm6"
     },
+    "resources" : [ "libraries/libeay32", "libraries/ssleay32" ],
     "source-url"    : "git://github.com/sergot/openssl.git"
 }
