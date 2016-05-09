@@ -51,3 +51,6 @@ our sub SSL_set_connect_state(SSL) is native(&ssl-lib)                         {
 our sub SSL_set_accept_state(SSL) is native(&ssl-lib)                          { ... }
 
 our sub SSL_set_bio(SSL, OpaquePointer, OpaquePointer) returns int32 is native(&ssl-lib) { ... }
+
+our sub SSL_set_verify(SSL, int8, int8) is native(&ssl-lib)                      { ... }
+our sub SSL_get_verify_result(SSL) returns long is native(&ssl-lib)            { ... }

@@ -19,6 +19,8 @@ has $.net-read;
 has $.net-bio;
 has $.internal-bio;
 
+constant SSL_VERIFY_NONE = 0x00;
+
 # SSLv2 | SSLv3 | TLSv1 | TLSv1.1 | TLSv1.2 | default
 subset ProtocolVersion of Numeric where * == 2| 3| 1| 1.1| 1.2| -1;
 
@@ -56,6 +58,7 @@ method new(Bool :$client = False, ProtocolVersion :$version = -1) {
     }
     my $ctx     = OpenSSL::Ctx::SSL_CTX_new( $method );
     my $ssl     = OpenSSL::SSL::SSL_new( $ctx );
+    OpenSSL::SSL::SSL_set_verify($ssl, SSL_VERIFY_NONE, 0x00);
 
     self.bless(:$ctx, :$ssl, :$client);
 }
@@ -153,6 +156,9 @@ method connect {
         my $e = $.handle-error($ret);
         last unless $e > 0;
     }
+
+    my $verify = OpenSSL::SSL::SSL_get_verify_result($!ssl);
+    die "Certificate error: $verify" if $verify;
 
     $ret;
 }
