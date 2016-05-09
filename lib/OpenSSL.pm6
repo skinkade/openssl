@@ -57,8 +57,10 @@ method new(Bool :$client = False, ProtocolVersion :$version = -1) {
         }
     }
     my $ctx     = OpenSSL::Ctx::SSL_CTX_new( $method );
+    die "Failed to load CAs" if !OpenSSL::Ctx::SSL_CTX_load_verify_locations($ctx, Code, '/etc/ssl/certs/');
+
     my $ssl     = OpenSSL::SSL::SSL_new( $ctx );
-    OpenSSL::SSL::SSL_set_verify($ssl, SSL_VERIFY_NONE, 0x00);
+    OpenSSL::SSL::SSL_set_verify($ssl, SSL_VERIFY_NONE, Code);
 
     self.bless(:$ctx, :$ssl, :$client);
 }
