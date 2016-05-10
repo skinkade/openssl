@@ -20,6 +20,7 @@ has $.net-bio;
 has $.internal-bio;
 
 constant SSL_VERIFY_NONE = 0x00;
+constant OPENSSL_CA_FILE = %?RESOURCES<ca-certificates.crt>.Str;
 
 # SSLv2 | SSLv3 | TLSv1 | TLSv1.1 | TLSv1.2 | default
 subset ProtocolVersion of Numeric where * == 2| 3| 1| 1.1| 1.2| -1;
@@ -57,7 +58,7 @@ method new(Bool :$client = False, ProtocolVersion :$version = -1) {
         }
     }
     my $ctx     = OpenSSL::Ctx::SSL_CTX_new( $method );
-    die "Failed to load CAs" if !OpenSSL::Ctx::SSL_CTX_load_verify_locations($ctx, Code, '/etc/ssl/certs/');
+    die "Failed to load CAs" if !OpenSSL::Ctx::SSL_CTX_load_verify_locations($ctx, OPENSSL_CA_FILE, Code);
 
     my $ssl     = OpenSSL::SSL::SSL_new( $ctx );
     OpenSSL::SSL::SSL_set_verify($ssl, SSL_VERIFY_NONE, Code);
@@ -159,8 +160,8 @@ method connect {
         last unless $e > 0;
     }
 
-    my $verify = OpenSSL::SSL::SSL_get_verify_result($!ssl);
-    die "Certificate error: $verify" if $verify;
+    my $X509_err = OpenSSL::SSL::SSL_get_verify_result($!ssl);
+    X::X509.new(:$X509_err).throw if $X509_err;
 
     $ret;
 }
